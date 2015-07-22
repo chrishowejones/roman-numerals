@@ -42,3 +42,20 @@
                  (str/replace-first roman-numerals (re-pattern roman) "")
                  numeral-tuples)
           (recur num roman-numerals more))))))
+
+
+(defn- accumulate-number
+  [numeral roman num arabic]
+  [(str/replace-first numeral (re-pattern roman) "") (+ num arabic)])
+
+(defn- roman->arabic [[numeral num] [arabic roman]]
+  (if-not (.startsWith numeral roman)
+    [numeral num]
+    (recur
+     (accumulate-number numeral roman num arabic)
+     [arabic roman])))
+
+(defn reduce-to-arabic
+  "Reducing version of convert roman numeral to arabic integer"
+  [rn]
+  (second (reduce roman->arabic [rn 0] numerals)))

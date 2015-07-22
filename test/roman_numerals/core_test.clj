@@ -141,3 +141,39 @@
     (is (= (reduce-to-numeral 1000) "M")))
   (testing "reduce 3999 to MMMCMXCIX"
     (is (= (reduce-to-numeral 3999) "MMMCMXCIX"))))
+
+(deftest test-reduce-roman-to-arabic
+  (testing "convert I to 1"
+    (is (= (reduce-to-arabic "I") 1)))
+  (testing "convert II to 2"
+    (is (= (reduce-to-arabic "II") 2)))
+  (testing "convert III to 3"
+    (is (= (reduce-to-arabic "III") 3)))
+  (testing "convert IV to 4"
+    (is (= (reduce-to-arabic "IV") 4)))
+  (testing "convert V to 5"
+    (is (= (reduce-to-arabic "V") 5)))
+  (testing "convert V to 8"
+    (is (= (reduce-to-arabic "VIII") 8)))
+  (testing "convert IX to 9"
+    (is (= (reduce-to-arabic "IX") 9)))
+  (testing "convert X to 10"
+    (is (= (reduce-to-arabic "X") 10)))
+  (testing "convert XXXIX to 39"
+    (is (= (reduce-to-arabic "XXXIX") 39)))
+  (testing "convert XL to 40"
+    (is (= (reduce-to-arabic "XL") 40)))
+  (testing "convert L to 50"
+    (is (= (reduce-to-arabic "L") 50)))
+  (testing "convert XCIX to 99"
+    (is (= (reduce-to-arabic "XCIX") 99)))
+  (testing "convert CD to 400"
+    (is (= (reduce-to-arabic "CD") 400)))
+  (testing "convert D to 500"
+    (is (= (reduce-to-arabic "D") 500)))
+  (testing "convert CMXCIX to 999"
+    (is (= (reduce-to-arabic "CMXCIX") 999)))
+  (testing "convert M to 1000"
+    (is (= (reduce-to-arabic "M") 1000)))
+  (testing "convert MMMCMXCIX to 3999"
+    (is (= (reduce-to-arabic "MMMCMXCIX") 3999))))
