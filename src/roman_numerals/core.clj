@@ -1,4 +1,5 @@
-(ns roman-numerals.core)
+(ns roman-numerals.core
+  (:require [clojure.string :as str]))
 
 (def numerals [[1000 "M"] [900 "CM"] [500 "D"] [400 "CD"] [100 "C"] [90 "XC"] [50 "L"] [40 "XL" ] [10 "X"] [9 "IX"] [5 "V"] [4 "IV"] [1 "I"]])
 
@@ -32,9 +33,12 @@
 (defn convert-to-arabic
   "Recursive version of convert roman numeral to arabic number"
   [rn]
-  (condp = rn
-    "I" 1
-    "II" 2
-    "III" 3
-    "IV" 4
-    "V" 5))
+  (loop [num 0 roman-numerals rn numeral-tuples numerals]
+    (if (nil? numeral-tuples)
+      num
+      (let [[[arabic roman] & more] numeral-tuples]
+        (if (.startsWith roman-numerals roman)
+          (recur (+ num arabic)
+                 (str/replace-first roman-numerals (re-pattern roman) "")
+                 numeral-tuples)
+          (recur num roman-numerals more))))))

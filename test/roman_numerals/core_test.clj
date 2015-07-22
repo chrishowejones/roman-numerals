@@ -64,7 +64,31 @@
   (testing "convert IV to 4"
     (is (= (convert-to-arabic "IV") 4)))
   (testing "convert V to 5"
-    (is (= (convert-to-arabic "V") 5))))
+    (is (= (convert-to-arabic "V") 5)))
+  (testing "convert V to 8"
+    (is (= (convert-to-arabic "VIII") 8)))
+  (testing "convert IX to 9"
+    (is (= (convert-to-arabic "IX") 9)))
+  (testing "convert X to 10"
+    (is (= (convert-to-arabic "X") 10)))
+  (testing "convert XXXIX to 39"
+    (is (= (convert-to-arabic "XXXIX") 39)))
+  (testing "convert XL to 40"
+    (is (= (convert-to-arabic "XL") 40)))
+  (testing "convert L to 50"
+    (is (= (convert-to-arabic "L") 50)))
+  (testing "convert XCIX to 99"
+    (is (= (convert-to-arabic "XCIX") 99)))
+  (testing "convert CD to 400"
+    (is (= (convert-to-arabic "CD") 400)))
+  (testing "convert D to 500"
+    (is (= (convert-to-arabic "D") 500)))
+  (testing "convert CMXCIX to 999"
+    (is (= (convert-to-arabic "CMXCIX") 999)))
+  (testing "convert M to 1000"
+    (is (= (convert-to-arabic "M") 1000)))
+  (testing "convert MMMCMXCIX to 3999"
+    (is (= (convert-to-arabic "MMMCMXCIX") 3999))))
 
 (deftest test-reduce-to-numeral
   (testing "reduce 1 to I"
