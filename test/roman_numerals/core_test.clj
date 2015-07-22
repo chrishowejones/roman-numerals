@@ -54,6 +54,18 @@
   (testing "reduce 3999 to MMMCMXCIX"
     (is (= (convert-to-numeral 3999) "MMMCMXCIX"))))
 
+(deftest test-convert-roman-to-arabic
+  (testing "convert I to 1"
+    (is (= (convert-to-arabic "I") 1)))
+  (testing "convert II to 2"
+    (is (= (convert-to-arabic "II") 2)))
+  (testing "convert III to 3"
+    (is (= (convert-to-arabic "III") 3)))
+  (testing "convert IV to 4"
+    (is (= (convert-to-arabic "IV") 4)))
+  (testing "convert V to 5"
+    (is (= (convert-to-arabic "V") 5))))
+
 (deftest test-reduce-to-numeral
   (testing "reduce 1 to I"
     (is (= (reduce-to-numeral 1) "I")))

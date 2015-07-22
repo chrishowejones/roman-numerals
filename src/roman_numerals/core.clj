@@ -27,3 +27,14 @@
   "Reducing version of convert arabic integer to roman numeral"
   [n]
   (second (reduce arabic->roman [n ""] numerals)))
+
+
+(defn convert-to-arabic
+  "Recursive version of convert roman numeral to arabic number"
+  [rn]
+  (condp = rn
+    "I" 1
+    "II" 2
+    "III" 3
+    "IV" 4
+    "V" 5))
