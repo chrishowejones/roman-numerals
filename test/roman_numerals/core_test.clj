@@ -1,6 +1,10 @@
 (ns roman-numerals.core-test
   (:require [clojure.test :refer :all]
-            [roman-numerals.core :refer :all]))
+            [roman-numerals.core :refer :all]
+            [clojure.test.check :as tc]
+            [clojure.test.check.generators :as gen]
+            [clojure.test.check.properties :as prop]
+            [clojure.test.check.clojure-test :as ct]))
 
 (deftest test-convert-arabic-to-roman
   (testing "convert 1 to I"
@@ -177,3 +181,15 @@
     (is (= (reduce-to-arabic "M") 1000)))
   (testing "convert MMMCMXCIX to 3999"
     (is (= (reduce-to-arabic "MMMCMXCIX") 3999))))
+
+(ct/defspec number-is-same-after-round-trip-conversion
+  100
+  (prop/for-all [num gen/pos-int]
+                (and (= num
+                        (convert-to-arabic (convert-to-numeral num))))))
+
+(ct/defspec number-is-same-after-round-trip-conversion-using-reduce
+  100
+  (prop/for-all [num gen/pos-int]
+                (and (= num
+                        (reduce-to-arabic (reduce-to-numeral num))))))
