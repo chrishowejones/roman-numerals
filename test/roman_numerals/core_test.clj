@@ -193,3 +193,92 @@
   (prop/for-all [num gen/pos-int]
                 (and (= num
                         (reduce-to-arabic (reduce-to-numeral num))))))
+
+(ct/defspec numeral-is-same-after-round-trip-conversion
+  100
+  (prop/for-all [num gen/pos-int]
+                (and (= num
+                        (convert-to-arabic (convert-to-numeral num))))))
+
+(ct/defspec numeral-is-same-after-round-trip-conversion-using-reduce
+  100
+  (prop/for-all [num gen/pos-int]
+                (and (= num
+                        (reduce-to-arabic (reduce-to-numeral num))))))
+
+(ct/defspec random-arabic-number-convert-to-numeral
+  100
+  (prop/for-all [[num roman] (gen/elements numerals)]
+                (= roman (convert-to-numeral num))))
+
+(ct/defspec random-arabic-number-reduce-to-numeral
+  100
+  (prop/for-all [[num roman] (gen/elements numerals)]
+                (= roman (reduce-to-numeral num))))
+
+(ct/defspec random-roman-number-convert-to-arabic
+  100
+  (prop/for-all [[num roman] (gen/elements numerals)]
+                (= num (convert-to-arabic roman))))
+
+(ct/defspec random-roman-number-reduce-to-arabic
+  100
+  (prop/for-all [[num roman] (gen/elements numerals)]
+                (= num (reduce-to-arabic roman))))
+
+
+(def prefixed-numerals [[900 "CM"] [400 "CD"] [90 "XC"] [40 "XL"] [9 "IX"] [4 "IV"]])
+
+(def base-numerals [[1000 "M"] [500 "D"] [100 "C"] [50 "L"] [10 "X"] [1 "I"]])
+
+(def gen-base-numerals (gen/elements base-numerals))
+
+(defn- not-include-numeral? [s roman] (not (re-find (re-pattern roman) s)))
+
+(defn- concat-tuple [[old-arabic old-roman] [new-arabic new-roman]]
+  (gen/return [(+ old-arabic new-arabic) (str old-roman new-roman)]))
+
+(defn- add-repfixed-numerals
+  [[arabic roman :as tuple]]
+  (let [filtered-prefixed-numerals
+        (filter
+         (fn [[num numeral]]
+           (and
+            (< num arabic)
+            (not-include-numeral? numeral roman)))
+         prefixed-numerals)
+
+        additional-tuple
+        (if (empty? filtered-prefixed-numerals)
+          [0 ""]
+          (rand-nth filtered-prefixed-numerals))]
+    (concat-tuple tuple additional-tuple)))
+
+(defn- multiply-numerals [[arabic roman :as tuple]]
+  (let [multiplier (inc (rand-int 3))]
+    [(* multiplier arabic) (apply str (repeat multiplier roman))]))
+
+(defn- base-ten-numeral? [[arabic _]]
+  (some (hash-set arabic) #{1 10 100 1000}))
+
+(def numeral-gen
+  (gen/bind gen-base-numerals
+            (fn [tuple]
+              (let [new-tuple (if (and (base-ten-numeral? tuple) (= 0 (rand-int 3)))
+                                (multiply-numerals tuple)
+                                tuple)]
+                (if (= 0 (rand-int 3))
+                  (add-repfixed-numerals new-tuple)
+                  (gen/return new-tuple))))))
+
+(ct/defspec random-arabic-number-conversion
+  100
+  (prop/for-all [[arabic roman] numeral-gen]
+                (= roman
+                   (convert-to-numeral arabic))))
+
+(ct/defspec random-roman-numeral-conversion
+  100
+  (prop/for-all [[arabic roman] numeral-gen]
+                (= arabic
+                   (convert-to-arabic roman))))
